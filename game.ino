@@ -86,12 +86,7 @@ void gameLoop(LaserDriver &LD)
 
 		checkCollision(ball,lPad,rPad,court_width,court_height);
 
-
 		drawFrame(LD, ball, lPad, rPad, court_width, court_height);
-		
-
-
-		
 		
 	}
 }
@@ -104,7 +99,6 @@ void gameLoop(LaserDriver &LD)
 *	@param rPad	The right paddle object.
 *	@param cWidth The width of the court.
 *	@param cHeigh The height of the court.
-
 **/
 void drawFrame(
 	LaserDriver &LD,
@@ -278,27 +272,3 @@ void checkCollision(
 		ball.setVel( -ball.getDx(), (ball.getY() - (rPad.getY()/2)) /15 );
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	 //SAVING DARREN'S VALUES   float  SX_ball = 1.5,
-	 //SAVING DARREN'S VALUES          SY_ball = 2.5,
-	 //SAVING DARREN'S VALUES          X_ball = 128.0,
-	 //SAVING DARREN'S VALUES          Y_ball = 128.0;
