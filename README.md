@@ -1,5 +1,5 @@
 # Laser Projector Project (LPP)
 by 
-   Arthur Silveira
-   Darren Curry
+   Arthur Silveira,
+   Darren Curry,
    Mark Richardson
