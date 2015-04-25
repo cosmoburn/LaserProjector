@@ -33,18 +33,17 @@ class Ball
 	 }
 
 	 /* Getter methods */
-	 unsigned char GetXpos()const{return xPos;}
-	 unsigned char GetYpos()const{return yPos;}
-	 unsigned char GetRadius()const{return radius;}
-	 char GetDx()const{return dx;}
-	 char GetDy()const{return dy;}
+	 unsigned char getX()const{return xPos;}
+	 unsigned char getY()const{return yPos;}
+	 unsigned char getR()const{return radius;}
+	 char getDx()const{return dx;}
+	 char getDy()const{return dy;}
 
-	 void UpdateVel(char xVel, char yVel) { dx = xVel; dy = yVel; }
+	 void setVel(char xVel, char yVel) { dx = xVel; dy = yVel; }
 
-	 void UpdatePos() {xPos+= dx; yPos+= dy;}
+	 void update() {xPos+= dx; yPos+= dy;}
 
-
-	 void Reset(){xPos = 127; yPos = 127; dx =0; dy =0;}
+	 void reset(){xPos = 127; yPos = 127; dx =0; dy =0;}
 
 	 	/**
 	 	* @brief
@@ -54,7 +53,7 @@ class Ball
 	 	* @param r
 	 	*
 	 	*/
-	 void Draw( LaserDriver &LD ) { LD.lCircle( xPos, yPos, radius ); }
+	 void draw( LaserDriver &LD ) { LD.lCircle( xPos, yPos, radius ); }
 
 };
 

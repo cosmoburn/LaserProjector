@@ -3,17 +3,24 @@
 * 	Last Edit:  04/24/15
 *	Depends on: laserDriver by Darren Curry.
 */
-#include "LaserDriver.h"
-#include "Ball.h"
-#include "Paddle.h"
-#include "math.h"
+
+
+#include "LaserDriver.h"		// Controls Galvanometer Scanners
+#include "Ball.h"						// Ball Class
+#include "Paddle.h"					// Paddle Class
+#include "math.h"						// sin() cos()
 	
-	/* Sides of circle */
-const unsigned char CIRCLE_SIDES = 8;
-unsigned char FILLER;
+/******************************************************************************
+*																Global Constants															*
+******************************************************************************/	
+const unsigned char CIRCLE_POINTS = 16;
+	//Points used to draw circle(ball)	
+
+const unsigned int DRAW_DELAY = 800;
+	//Delay(in microseconds) between points
 
 /******************************************************************************
-*								Prototyping											  *
+*																Prototyping					  												*
 ******************************************************************************/
 
 void gameLoop(LaserDriver &LD);
@@ -38,7 +45,7 @@ void setup() {}
 
 
 /******************************************************************************
-*                                  Main                                                                             *
+*                                  Main                                       *
 ******************************************************************************/
 
 void loop()
@@ -72,10 +79,10 @@ void gameLoop(LaserDriver &LD)
 		/* Game loop */
 	while(true)
 	{	
-		lPad.UpdateY((analogRead(4)/2));
-		rPad.UpdateY((analogRead(5)/2));
+		lPad.update((analogRead(4)/2));
+		rPad.update((analogRead(5)/2));
 
-		ball.UpdatePos();
+		ball.update();
 
 		checkCollision(ball,lPad,rPad,court_width,court_height);
 
@@ -89,106 +96,122 @@ void gameLoop(LaserDriver &LD)
 	}
 }
 
-/* Draws an entire frame */
+/*
+* @brief Draws one frame of our game.
+*
+* @param LD The LaserDriver object for controling the galvo scanners.
+* @param lPad The left paddle object.
+*	@param rPad	The right paddle object.
+*	@param cWidth The width of the court.
+*	@param cHeigh The height of the court.
+
+**/
 void drawFrame(
 	LaserDriver &LD,
 	const Ball &ball,
 	const Paddle &lPad,
 	const Paddle &rPad,
-	unsigned char width,
-	unsigned char height)
+	unsigned char cWidth,
+	unsigned char cHeight)
 {
 
+	/* From  top left corner(0,0) */
 	LD.lSet( 0, 0 );
-	delayMicroseconds(700);
-	LD.lSet( width, 0 );
-	delayMicroseconds(700);
-	LD.lSet( width, height );
-	delayMicroseconds(700);
-	LD.lSet( 0, height );
-	delayMicroseconds(700);
-	LD.lSet( 0 , 0 );
-	delayMicroseconds(700);
-	LD.lSet( width, 0 );
-	delayMicroseconds(700);
+	delayMicroseconds(DRAW_DELAY);
 
-	LD.lSet( width, rPad.GetYpos() );
+	/* to top of left paddle */
+	LD.lSet( 0, lPad.getY() );
+	delayMicroseconds(DRAW_DELAY);
 
-	delayMicroseconds(700);
-	LD.lSet( (width - rPad.GetWidth()), rPad.GetYpos() );
-	delayMicroseconds(700);
-	LD.lSet( (width - rPad.GetWidth()), ( rPad.GetYpos() + rPad.GetHeight())  );
-	delayMicroseconds(700);
-	LD.lSet( width, ( rPad.GetYpos() + rPad.GetHeight()) );
-	delayMicroseconds(700);
-	LD.lSet(width, height);
-	delayMicroseconds(700);
-	LD.lSet(0, height);
-	delayMicroseconds(700);
+	/* Draw left paddle */
+	LD.lSet( lPad.getW(), lPad.getY() );
+	delayMicroseconds(DRAW_DELAY);
+	LD.lSet( lPad.getW(), lPad.getY() + lPad.getH() );
+	delayMicroseconds(DRAW_DELAY);
+	LD.lSet( lPad.getX(), lPad.getY() + lPad.getH() );
+	delayMicroseconds(DRAW_DELAY);
 
-	LD.lSet(0, (lPad.GetYpos()+ lPad.GetHeight()));
-	delayMicroseconds(700);
-	LD.lSet(lPad.GetWidth(), (lPad.GetYpos()+ lPad.GetHeight()) );
-	delayMicroseconds(700);
-	LD.lSet(lPad.GetWidth(), lPad.GetYpos());
-	delayMicroseconds(700);
-	LD.lSet(0, lPad.GetYpos());
-	delayMicroseconds(700);
+	/* to bottom left corner, then bottom center */
+	LD.lSet( 0, cHeight);;
+	delayMicroseconds(DRAW_DELAY);
+	LD.lSet( cWidth/2, cHeight );
+	delayMicroseconds(DRAW_DELAY);
 
-	LD.lSet(0,0);
-	delayMicroseconds(700);
-
-	LD.lSet((width/2), 0 );
-	delayMicroseconds(700);
-	LD.lSet((width/2), (height/2));
-	delayMicroseconds(700);
-
+	/* to Y position of the ball, then draw ball and return */
+		
+		//unconment these 4 lines for different effect on ball
+	//LD.lSet( cWidth/2, ball.getY() );
+	//delayMicroseconds(DRAW_DELAY);
+	LD.lSet( cWidth/2, ball.getY() );
 	drawCircle(LD, ball);
+	//delayMicroseconds(DRAW_DELAY);
+	//LD.lSet( cWidth/2, ball.getY() );
+	delayMicroseconds(DRAW_DELAY);
 
-	delayMicroseconds(700);
+	/* to top center then top right corner(255, 0) */
+	LD.lSet( cWidth/2, 0 );
+	delayMicroseconds(DRAW_DELAY);
+	LD.lSet( cWidth, 0 );
+	delayMicroseconds(DRAW_DELAY);
 
-	LD.lSet((width/2), (height/2));
-	delayMicroseconds(700);
-	LD.lSet((width/2), height);
-	delayMicroseconds(700);
-	LD.lSet(0, height);
-	delayMicroseconds(700);
-	LD.lSet(0,0);
-	delayMicroseconds(700);
+	// ------ repeat on right side to complete drawing of frame ------\\
+
+	/* to top of right paddle then draw right paddle */
+	LD.lSet( cWidth, rPad.getY() );
+	delayMicroseconds(DRAW_DELAY);
+	LD.lSet( cWidth - rPad.getW(), rPad.getY() );
+	delayMicroseconds(DRAW_DELAY);
+	LD.lSet( cWidth - rPad.getW(), rPad.getY() + rPad.getH() );
+	delayMicroseconds(DRAW_DELAY);
+	LD.lSet( cWidth, rPad.getY() + rPad.getH() );
+	delayMicroseconds(DRAW_DELAY);
+
+	/* to bottm right corner then bottom center */
+	LD.lSet( cWidth, cHeight);;
+	delayMicroseconds(DRAW_DELAY);
+	LD.lSet( cWidth/2, cHeight );
+	delayMicroseconds(DRAW_DELAY);
+
+	/* draw middle line then back to beginning (0,0) */
+	LD.lSet( cWidth/2, 0 );
+	delayMicroseconds(DRAW_DELAY);
+	LD.lSet( 0, 0 );
+	delayMicroseconds(DRAW_DELAY);
 
 }
+
 	
 /* draws a circle */
 void drawCircle(LaserDriver &LD, const Ball &ball)
 {
-	static char cosTable[CIRCLE_SIDES];
-	static char sinTable[CIRCLE_SIDES];
+	static char cosTable[CIRCLE_POINTS];
+	static char sinTable[CIRCLE_POINTS];
 
 	static bool firstRun = true;
 
 	if (firstRun)
 	{
 
-		for(unsigned char i = 0; i< CIRCLE_SIDES; i++){
+		for(unsigned char i = 0; i< CIRCLE_POINTS; i++){
 
 			static float angle = 0.0f;
-			cosTable[i] = (cos(angle) * ball.GetRadius()) + ball.GetRadius();
-			sinTable[i] = sin(angle) * ball.GetRadius() + ball.GetRadius();
+			cosTable[i] = (cos(angle) * ball.getR()) + ball.getR();
+			sinTable[i] = sin(angle) * ball.getR() + ball.getR();
 
-			angle += ((2*PI)/CIRCLE_SIDES);
+			angle += ((2*PI)/CIRCLE_POINTS);
 
 		}
 
 		firstRun = false;
 	}
 
-	for(unsigned char i=0; i<CIRCLE_SIDES; i++){
+	for(unsigned char i=0; i<CIRCLE_POINTS; i++){
 	    
-	    LD.lSet(( ball.GetXpos() +  cosTable[i] ),( ball.GetYpos() +  sinTable[i] ));
+	    LD.lSet(( ball.getX() +  cosTable[i] ),( ball.getY() +  sinTable[i] ));
 	    delayMicroseconds(600);
 	}
 
-	LD.lSet( (ball.GetXpos() + cosTable[0]), ( ball.GetYpos() +  sinTable[0] )  );
+	LD.lSet( (ball.getX() + cosTable[0]), ( ball.getY() +  sinTable[0] )  );
 	delayMicroseconds(100);
 
 }
@@ -201,58 +224,58 @@ void checkCollision(
 	const unsigned char court_height)
 {	
 	/* if player 2 scores */
-	if ( ball.GetXpos() - ball.GetRadius() <= ball.GetRadius())
+	if ( ball.getX() - ball.getR() <= ball.getR())
 	{	
 		//ball.Reset();
-		//ball.UpdateVel(3,3);
+		//ball.setVel(3,3);
 		
 	}
 	/* if player 1 scores */
-	else if ( ball.GetXpos() >= (court_width - ball.GetRadius()) )
+	else if ( ball.getX() >= (court_width - ball.getR()) )
 	{
 		//ball.Reset();
-		//ball.UpdateVel(-3,0);
+		//ball.setVel(-3,0);
 	}
 
-	if (ball.GetYpos() <= ball.GetRadius()  ||
-		ball.GetYpos() >= court_height - ball.GetRadius())		
+	if (ball.getY() <= ball.getR()  ||
+		ball.getY() >= court_height - ball.getR())		
 	{
 
-		ball.UpdateVel( ball.GetDx(), -ball.GetDy() );
+		ball.setVel( ball.getDx(), -ball.getDy() );
 	}
 
 
 	/* Paddle Collision */
-	if (lPad.GetYpos() >= court_height - lPad.GetHeight() )
+	if (lPad.getY() >= court_height - lPad.getH() )
 	{
 
-		lPad.SetPosY( court_height - lPad.GetHeight() );
+		lPad.setY( court_height - lPad.getH() );
 	}
 
-	if (rPad.GetYpos() >= court_height - rPad.GetHeight() )
+	if (rPad.getY() >= court_height - rPad.getH() )
 	{
 
-		rPad.SetPosY( court_height - rPad.GetHeight() );
+		rPad.setY( court_height - rPad.getH() );
 	}
 
 
 	//* Paddle Collision with Ball *//
 
 			/* left paddle*/
-	if( ((ball.GetXpos() + ball.GetRadius()) <= lPad.GetWidth())
-		&& (ball.GetYpos() + ball.GetRadius()) >= lPad.GetYpos()
-		&& (ball.GetYpos() - ball.GetRadius()) <= lPad.GetYpos() + lPad.GetHeight() )
+	if( ((ball.getX() + ball.getR()) <= lPad.getW())
+		&& (ball.getY() + ball.getR()) >= lPad.getY()
+		&& (ball.getY() - ball.getR()) <= lPad.getY() + lPad.getH() )
 	{
-	 	ball.UpdateVel( -ball.GetDx(), (ball.GetYpos() - (lPad.GetYpos()/2)) /15 );  
+	 	ball.setVel( -ball.getDx(), (ball.getY() - (lPad.getY()/2)) /15 );  
 	}
 
 			/* right paddle */
-	if ( ((ball.GetXpos() - ball.GetRadius()) >= court_width -rPad.GetWidth())
-		&& (ball.GetYpos() + ball.GetRadius()) >= rPad.GetYpos()
-		&& (ball.GetYpos() - ball.GetRadius()) <= rPad.GetYpos() + rPad.GetHeight() )
+	if ( ((ball.getX() - ball.getR()) >= court_width -rPad.getW())
+		&& (ball.getY() + ball.getR()) >= rPad.getY()
+		&& (ball.getY() - ball.getR()) <= rPad.getY() + rPad.getH() )
 
 	{
-		ball.UpdateVel( -ball.GetDx(), (ball.GetYpos() - (rPad.GetYpos()/2)) /15 );
+		ball.setVel( -ball.getDx(), (ball.getY() - (rPad.getY()/2)) /15 );
 	}
 }
 

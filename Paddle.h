@@ -34,23 +34,23 @@ class Paddle
 	 }
 
 		/* Getter methods */
-		int GetXpos()const{return xPos;}
-		int GetYpos()const{return yPos;}
-	 	int GetDx()const{return dx;}
-	 	int GetDy()const{return dy;}
-	 	int GetWidth()const{return width;}
-	 	int GetHeight()const{return height;}
+		int getX()const{return xPos;}
+		int getY()const{return yPos;}
+	 	int getDx()const{return dx;}
+	 	int getDy()const{return dy;}
+	 	int getW()const{return width;}
+	 	int getH()const{return height;}
 
-	 	void UpdateY(int y){yPos=y;}
+	 	void update(int y){yPos=y;}
 
-	 	void SetPosY(unsigned char y) { yPos = y;}
+	 	void setY(unsigned char y) { yPos = y;}
 
 	 	/**
 	 	*	@brief 
 	 	*	
 	 	*	@params	
 	 	*/
-	 	void Draw(	LaserDriver &LD )	{ LD.lRect(xPos, yPos, width, height); }
+	 	void draw(	LaserDriver &LD )	{ LD.lRect(xPos, yPos, width, height); }
 
 };
 
