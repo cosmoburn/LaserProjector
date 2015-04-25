@@ -11,16 +11,16 @@
 #include "math.h"						// sin() cos()
 	
 /******************************************************************************
-*																Global Constants															*
+*                               Global Constants                              *
 ******************************************************************************/	
-const unsigned char CIRCLE_POINTS = 16;
+const unsigned char CIRCLE_POINTS = 8;
 	//Points used to draw circle(ball)	
 
 const unsigned int DRAW_DELAY = 800;
 	//Delay(in microseconds) between points
 
 /******************************************************************************
-*																Prototyping					  												*
+*                               Prototyping                                   *
 ******************************************************************************/
 
 void gameLoop(LaserDriver &LD);
@@ -48,15 +48,21 @@ void setup() {}
 *                                  Main                                       *
 ******************************************************************************/
 
+/* The Arduino loop */
 void loop()
 {
-
-	/* create LaserDriver object */
+	/* Creates LaserDriver object and start main game loop */
 	LaserDriver LD;
 	gameLoop(LD);
+
 }
 	
-	/* main game loop */
+/*
+* @brief The main game loop, where the magic happens.
+*	
+*	@param The LaserDriver object, used to draw lines with projector.
+*
+**/
 void gameLoop(LaserDriver &LD)
 {		
 		/* Dimenssions of Court */
@@ -90,6 +96,11 @@ void gameLoop(LaserDriver &LD)
 		
 	}
 }
+
+
+/******************************************************************************
+*                            Secondary Functions                              *
+******************************************************************************/
 
 /*
 * @brief Draws one frame of our game.
@@ -175,7 +186,13 @@ void drawFrame(
 }
 
 	
-/* draws a circle */
+/*  
+*	@brief draws the Ball 
+* 
+*	@param
+* @param
+*
+**/
 void drawCircle(LaserDriver &LD, const Ball &ball)
 {
 	static char cosTable[CIRCLE_POINTS];
@@ -210,6 +227,15 @@ void drawCircle(LaserDriver &LD, const Ball &ball)
 
 }
 
+/*    //// MUCH WORK NEEDED HERE \\\\
+* @brief Checks for all the collisions in the game.
+*
+*	@param 
+*	@param
+*	@param
+*	@param 
+*	@param
+**/
 void checkCollision(
 	Ball &ball,
 	Paddle &lPad,

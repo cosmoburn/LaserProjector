@@ -23,7 +23,7 @@ void LaserDriver::lSet(char X, char Y) {
         //Write position to data bus
     
     writeData();
-        //Write Data to Analog converter
+        //Wri te Data to Analog converter
     
     setAxisXY('Y');
         //Set bus to Y
@@ -34,7 +34,7 @@ void LaserDriver::lSet(char X, char Y) {
     writeData();
         //Write data to analog converter
 }
-
+ 
 void LaserDriver::lRect(char X, char Y, char W, char H){
     //Draws a rectangle at position X,Y and size W and H
     lSet(X-W/2, Y-H/2);
