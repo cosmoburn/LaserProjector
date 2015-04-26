@@ -43,7 +43,7 @@ class Paddle
 
 	 	void update(int y){yPos=y;}
 
-	 	void setY(unsigned char y) { yPos = y;}
+	 	void setY(int y) { yPos = y;}
 
 	 	/**
 	 	*	@brief 

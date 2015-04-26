@@ -12,17 +12,17 @@ class Ball
 	private:
 
 		/* Radius and Position of Ball */
-		unsigned char radius;
-		unsigned char xPos;
-		unsigned char yPos;
+		int radius;
+		int xPos;
+		int yPos;
 
 		/* Velocity of Ball*/
-		unsigned char dx;
-		unsigned char dy;
+		int dx;
+		int dy;
 
 	public:
 
-	 Ball(unsigned char x, unsigned char y, unsigned char r): 
+	 Ball(int x, int y, int r): 
 	 	xPos(x), 
 	 	yPos(y),
 	 	radius(r),
@@ -33,17 +33,17 @@ class Ball
 	 }
 
 	 /* Getter methods */
-	 unsigned char getX()const{return xPos;}
-	 unsigned char getY()const{return yPos;}
-	 unsigned char getR()const{return radius;}
-	 char getDx()const{return dx;}
-	 char getDy()const{return dy;}
+	 int getX()const{return xPos;}
+	 int getY()const{return yPos;}
+	 int getR()const{return radius;}
+	 int getDx()const{return dx;}
+	 int getDy()const{return dy;}
 
-	 void setVel(char xVel, char yVel) { dx = xVel; dy = yVel; }
+	 void setVel(int xVel, int yVel) { dx = xVel; dy = yVel; }
 
 	 void update() {xPos+= dx; yPos+= dy;}
 
-	 void reset(){xPos = 127; yPos = 127; dx =0; dy =0;}
+	 void reset(int x, int y){xPos = x; yPos = y; dx =0; dy =0;}
 
 	 	/**
 	 	* @brief

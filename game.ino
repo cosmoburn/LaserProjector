@@ -13,10 +13,10 @@
 /******************************************************************************
 *                               Global Constants                              *
 ******************************************************************************/	
-const unsigned char CIRCLE_POINTS = 8;
+const int CIRCLE_POINTS = 10;
 	//Points used to draw circle(ball)	
 
-const unsigned int DRAW_DELAY = 800;
+const unsigned int DRAW_DELAY = 700;
 	//Delay(in microseconds) between points
 
 /******************************************************************************
@@ -30,15 +30,15 @@ void drawFrame(
 	const Ball &ball,
 	const Paddle &lPad,
 	const Paddle &rPad,
-	unsigned char width,
-	unsigned char height);
+	int width,
+	int height);
 
 void checkCollision(
 	Ball &ball,
 	Paddle &lPad,
 	Paddle &rPad,
-	const unsigned char court_width,
-	const unsigned char court_height);
+	const int court_width,
+	const int court_height);
 
 /* Arduino needs this*/
 void setup() {}
@@ -66,16 +66,16 @@ void loop()
 void gameLoop(LaserDriver &LD)
 {		
 		/* Dimenssions of Court */
-	const unsigned char court_width = 255;
-	const unsigned char court_height = 255;
+	const int court_width = 245;
+	const int court_height = 245;
 
 		/* Radius of ball */
-	const unsigned char ball_r = 5; 
+	const int ball_r = 5; 
 
 		/* Create Ball at the center of the court */
 	static Ball ball( 
-		( (court_width/2)- ball_r),
-		((court_height/2)- ball_r),
+		( (court_width) ),
+		((court_height/2) ),
 		ball_r );
 
 		/* Create left and right paddles */
@@ -85,6 +85,7 @@ void gameLoop(LaserDriver &LD)
 		/* Game loop */
 	while(true)
 	{	
+
 		lPad.update((analogRead(4)/2));
 		rPad.update((analogRead(5)/2));
 
@@ -116,8 +117,8 @@ void drawFrame(
 	const Ball &ball,
 	const Paddle &lPad,
 	const Paddle &rPad,
-	unsigned char cWidth,
-	unsigned char cHeight)
+	int cWidth,
+	int cHeight)
 {
 
 	/* From  top left corner(0,0) */
@@ -142,16 +143,15 @@ void drawFrame(
 	LD.lSet( cWidth/2, cHeight );
 	delayMicroseconds(DRAW_DELAY);
 
-	/* to Y position of the ball, then draw ball and return */
+	/* to  position of the ball, then draw ball and return */
 		
-		//unconment these 4 lines for different effect on ball
-	//LD.lSet( cWidth/2, ball.getY() );
-	//delayMicroseconds(DRAW_DELAY);
-	LD.lSet( cWidth/2, ball.getY() );
-	drawCircle(LD, ball);
-	//delayMicroseconds(DRAW_DELAY);
-	//LD.lSet( cWidth/2, ball.getY() );
+	LD.lSet( ball.getX(), (ball.getY() + ball.getR()) );
 	delayMicroseconds(DRAW_DELAY);
+	drawCircle(LD, ball);
+	delayMicroseconds(DRAW_DELAY);
+	LD.lSet( ball.getX(), ball.getY() - ball.getR() );
+	delayMicroseconds(DRAW_DELAY);
+
 
 	/* to top center then top right corner(255, 0) */
 	LD.lSet( cWidth/2, 0 );
@@ -203,11 +203,11 @@ void drawCircle(LaserDriver &LD, const Ball &ball)
 	if (firstRun)
 	{
 
-		for(unsigned char i = 0; i< CIRCLE_POINTS; i++){
+		for(int i = 0; i< CIRCLE_POINTS; i++){
 
-			static float angle = 0.0f;
-			cosTable[i] = (cos(angle) * ball.getR()) + ball.getR();
-			sinTable[i] = sin(angle) * ball.getR() + ball.getR();
+			static float angle = 3*PI/3;
+			cosTable[i] = cos(angle) * ball.getR() ;
+			sinTable[i] = sin(angle) * ball.getR() ;
 
 			angle += ((2*PI)/CIRCLE_POINTS);
 
@@ -216,14 +216,14 @@ void drawCircle(LaserDriver &LD, const Ball &ball)
 		firstRun = false;
 	}
 
-	for(unsigned char i=0; i<CIRCLE_POINTS; i++){
+	for(int i=0; i<CIRCLE_POINTS; i++){
 	    
 	    LD.lSet(( ball.getX() +  cosTable[i] ),( ball.getY() +  sinTable[i] ));
-	    delayMicroseconds(600);
+	    delayMicroseconds(500);
 	}
 
 	LD.lSet( (ball.getX() + cosTable[0]), ( ball.getY() +  sinTable[0] )  );
-	delayMicroseconds(100);
+	delayMicroseconds(500);
 
 }
 
@@ -240,20 +240,20 @@ void checkCollision(
 	Ball &ball,
 	Paddle &lPad,
 	Paddle &rPad,
-	const unsigned char court_width,
-	const unsigned char court_height)
+	const int court_width,
+	const int court_height)
 {	
 	/* if player 2 scores */
 	if ( ball.getX() - ball.getR() <= ball.getR())
 	{	
-		//ball.Reset();
+		//ball.reset(court_width/2, court_height/2);
 		//ball.setVel(3,3);
 		
 	}
 	/* if player 1 scores */
 	else if ( ball.getX() >= (court_width - ball.getR()) )
 	{
-		//ball.Reset();
+		//ball.reset(court_width/2, court_height/2);
 		//ball.setVel(-3,0);
 	}
 
@@ -286,7 +286,7 @@ void checkCollision(
 		&& (ball.getY() + ball.getR()) >= lPad.getY()
 		&& (ball.getY() - ball.getR()) <= lPad.getY() + lPad.getH() )
 	{
-	 	ball.setVel( -ball.getDx(), (ball.getY() - (lPad.getY()/2)) /15 );  
+	 //	ball.setVel( -ball.getDx(), (ball.getY() - (lPad.getY()/2)) /15 );  
 	}
 
 			/* right paddle */
@@ -295,6 +295,6 @@ void checkCollision(
 		&& (ball.getY() - ball.getR()) <= rPad.getY() + rPad.getH() )
 
 	{
-		ball.setVel( -ball.getDx(), (ball.getY() - (rPad.getY()/2)) /15 );
+		//ball.setVel( -ball.getDx(), (ball.getY() - (rPad.getY()/2)) /15 );
 	}
 }
