@@ -13,10 +13,10 @@
 /******************************************************************************
 *                               Global Constants                              *
 ******************************************************************************/	
-const int CIRCLE_POINTS = 10;
+const int CIRCLE_POINTS = 8;
 	//Points used to draw circle(ball)	
 
-const unsigned int DRAW_DELAY = 700;
+const unsigned int DRAW_DELAY = 1000;
 	//Delay(in microseconds) between points
 
 /******************************************************************************
@@ -66,16 +66,16 @@ void loop()
 void gameLoop(LaserDriver &LD)
 {		
 		/* Dimenssions of Court */
-	const int court_width = 245;
-	const int court_height = 245;
+	const int court_width = 255;
+	const int court_height = 255;
 
 		/* Radius of ball */
 	const int ball_r = 5; 
 
 		/* Create Ball at the center of the court */
 	static Ball ball( 
-		( (court_width) ),
-		((court_height/2) ),
+		(court_width/2)+ 10,
+		court_height/2,
 		ball_r );
 
 		/* Create left and right paddles */
@@ -147,6 +147,7 @@ void drawFrame(
 		
 	LD.lSet( ball.getX(), (ball.getY() + ball.getR()) );
 	delayMicroseconds(DRAW_DELAY);
+	//circle drawing function
 	drawCircle(LD, ball);
 	delayMicroseconds(DRAW_DELAY);
 	LD.lSet( ball.getX(), ball.getY() - ball.getR() );
@@ -195,8 +196,8 @@ void drawFrame(
 **/
 void drawCircle(LaserDriver &LD, const Ball &ball)
 {
-	static char cosTable[CIRCLE_POINTS];
-	static char sinTable[CIRCLE_POINTS];
+	static short cosTable[CIRCLE_POINTS];
+	static short sinTable[CIRCLE_POINTS];
 
 	static bool firstRun = true;
 
@@ -205,7 +206,7 @@ void drawCircle(LaserDriver &LD, const Ball &ball)
 
 		for(int i = 0; i< CIRCLE_POINTS; i++){
 
-			static float angle = 3*PI/3;
+			static float angle = (PI/2);
 			cosTable[i] = cos(angle) * ball.getR() ;
 			sinTable[i] = sin(angle) * ball.getR() ;
 
@@ -219,11 +220,11 @@ void drawCircle(LaserDriver &LD, const Ball &ball)
 	for(int i=0; i<CIRCLE_POINTS; i++){
 	    
 	    LD.lSet(( ball.getX() +  cosTable[i] ),( ball.getY() +  sinTable[i] ));
-	    delayMicroseconds(500);
+	    delayMicroseconds(200);
 	}
 
 	LD.lSet( (ball.getX() + cosTable[0]), ( ball.getY() +  sinTable[0] )  );
-	delayMicroseconds(500);
+	//delayMicroseconds(500);
 
 }
 
@@ -243,58 +244,61 @@ void checkCollision(
 	const int court_width,
 	const int court_height)
 {	
-	/* if player 2 scores */
-	if ( ball.getX() - ball.getR() <= ball.getR())
-	{	
-		//ball.reset(court_width/2, court_height/2);
-		//ball.setVel(3,3);
-		
-	}
+
 	/* if player 1 scores */
-	else if ( ball.getX() >= (court_width - ball.getR()) )
+	if ( ball.getX() >= court_width - ball.getR() )
 	{
-		//ball.reset(court_width/2, court_height/2);
-		//ball.setVel(-3,0);
+		ball.reset(court_width/2, court_height/2);
+		ball.setVel(0,0);
 	}
 
-	if (ball.getY() <= ball.getR()  ||
-		ball.getY() >= court_height - ball.getR())		
+	/* if player 2 scores */
+	if ( ball.getX() <= ball.getR() )
+	{	
+		ball.reset(court_width/2, court_height/2);
+		ball.setVel(0,0);	
+	}
+
+		/* ball collision with top and bottom walls */
+	if (ball.getY() <= ball.getR()  
+		|| ball.getY() >= court_height - ball.getR())
 	{
 
 		ball.setVel( ball.getDx(), -ball.getDy() );
 	}
 
 
-	/* Paddle Collision */
+			/* Paddle Collision with walls */
 	if (lPad.getY() >= court_height - lPad.getH() )
 	{
-
 		lPad.setY( court_height - lPad.getH() );
 	}
 
 	if (rPad.getY() >= court_height - rPad.getH() )
 	{
-
 		rPad.setY( court_height - rPad.getH() );
 	}
 
 
-	//* Paddle Collision with Ball *//
+		/* Paddles Collision with Ball */
 
 			/* left paddle*/
-	if( ((ball.getX() + ball.getR()) <= lPad.getW())
-		&& (ball.getY() + ball.getR()) >= lPad.getY()
-		&& (ball.getY() - ball.getR()) <= lPad.getY() + lPad.getH() )
-	{
-	 //	ball.setVel( -ball.getDx(), (ball.getY() - (lPad.getY()/2)) /15 );  
+	if ( ball.getX() -ball.getR() <= lPad.getW()
+		&& ball.getY() + ball.getR() >= lPad.getY()
+		&& ball.getY() - ball.getR() <= lPad.getY() + lPad.getH() )
+	{	
+		ball.setVel(-ball.getDx(), ball.getDy());
+	 	//ball.setVel( -ball.getDx(), (ball.getY() - (lPad.getY()/2)) /15 );  
 	}
 
-			/* right paddle */
-	if ( ((ball.getX() - ball.getR()) >= court_width -rPad.getW())
-		&& (ball.getY() + ball.getR()) >= rPad.getY()
-		&& (ball.getY() - ball.getR()) <= rPad.getY() + rPad.getH() )
 
-	{
+
+			/* right paddle */
+	if ( ball.getX() + ball.getR() >= court_width - rPad.getW() 
+		&& ball.getY() + ball.getR() >= rPad.getY()
+		&& ball.getY() - ball.getR() <= rPad.getY() + rPad.getH() )
+	{	
+		ball.setVel(-ball.getDx(), ball.getDy());
 		//ball.setVel( -ball.getDx(), (ball.getY() - (rPad.getY()/2)) /15 );
 	}
 }

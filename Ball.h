@@ -26,8 +26,8 @@ class Ball
 	 	xPos(x), 
 	 	yPos(y),
 	 	radius(r),
-	 	dx(3),
-	 	dy(3) 
+	 	dx(2),
+	 	dy(2) 
 	 {
 	 	//
 	 }
@@ -41,7 +41,7 @@ class Ball
 
 	 void setVel(int xVel, int yVel) { dx = xVel; dy = yVel; }
 
-	 void update() {xPos+= dx; yPos+= dy;}
+	 void update() {if(dx < radius){xPos+= dx;} if(dy< radius){yPos+= dy;} }  
 
 	 void reset(int x, int y){xPos = x; yPos = y; dx =0; dy =0;}
 

@@ -22,6 +22,7 @@ class Paddle
 
 	public:
 
+		/* constructor */
 		Paddle(int x, int y, int w, int h): 
 	 		xPos(x), 
 	 		yPos(y),
@@ -29,9 +30,9 @@ class Paddle
 	 		height(h),
 	 		dx(0),
 	 		dy(0) 
-	 {
-	 	//
-	 }
+	 	{
+	 		//
+	 	}
 
 		/* Getter methods */
 		int getX()const{return xPos;}
