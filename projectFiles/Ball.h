@@ -6,7 +6,7 @@
 #ifndef BALL_H
 #define BALL_H
 
-#include <../LaserDriver.h>  // For drawing with laser projector
+#include "LaserDriver.h"  // For drawing with laser projector
 
 class Ball
 {

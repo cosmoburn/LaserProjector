@@ -8,7 +8,7 @@
 #ifndef PADDLE_H
 #define PADDLE_H
 
-#include <../LaserDriver.h>
+#include "LaserDriver.h"
 
 /**
 * @brief Paddle  
