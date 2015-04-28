@@ -39,46 +39,9 @@ void LaserDriver::lSet(char X, char Y) {
 		writeData();
 				//Write data to analog converter
 }
- 
-void LaserDriver::lRect(char X, char Y, char W, char H){
-		//Draws a rectangle at position X,Y and size W and H
-		lSet(X-W/2, Y-H/2);
-		delayMicroseconds(500);
-		
-		lSet(X+W/2, Y-H/2);
-		delayMicroseconds(1000);
 
-		lSet(X+W/2, Y+H/2);
-		delayMicroseconds(500);
-		lSet(X-W/2, Y+H/2);
-		
-		delayMicroseconds(500);
 
-		lSet(X-W/2, Y-H/2);
-		delayMicroseconds(500);
-}
-
-void LaserDriver::lCircle(char X, char Y, char R) {
-		char temp_X, temp_Y;
-		
-		for ( temp_X=-R; temp_X<=R; temp_X++ ) {
-				temp_Y = sqrt( (R*R) - (temp_X*temp_X) );
-				lSet( temp_X + X, temp_Y + Y );
-				
-				if (temp_X == -R)
-						delay(2);
-		}
-		
-		for ( temp_X=R-1; temp_X>=-R; temp_X-- ) {
-				temp_Y = -1 * sqrt( (R*R) - (temp_X*temp_X) );
-				lSet( temp_X + X, temp_Y + Y );
-				if (temp_X == -R)
-						delay(2);
-		}
-		
-}
-
-void LaserDriver::lCircleHD(const int &X, const int &Y, const int &R)
+void LaserDriver::lCircle(const int &X, const int &Y, const int &R)
 {    
 		static int cosTable[CIRCLE_POINTS];
 		static int sinTable[CIRCLE_POINTS];

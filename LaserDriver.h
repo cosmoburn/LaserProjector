@@ -25,21 +25,15 @@ public:
 		
 		void lSet(char X, char Y);
 		//Sets the position of the laser w/o line draw algorithm
-		
-		void lRect(char X, char Y, char W, char H);
-		//Draws a rectangle at position X,Y and size W and H
-		
-		void lCircle(char X, char Y, char R);
-		//Draws a circle at position X, Y with radius R
 
 		/*
-		*   @brief Draws a better looking circle :P
+		*   @brief Draws a circle
 		*
 		*   @param X The x-position of the center of circle.
 		*   @param Y The y-position of the center of circle.
 		*   @param R The radius of the circle.
 		**/
-		void lCircleHD(const int &X, const int &Y, const int &R);
+		void lCircle(const int &X, const int &Y, const int &R);
 		//Draws a better looking cirle :P
 		
 		

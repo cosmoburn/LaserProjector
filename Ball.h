@@ -79,9 +79,9 @@ class Ball
 		* @brief Draws the ball on the screen by calling on LaserDriver class
 		*
 		*	@param LD The LaserDrive object used to draw circles @ (x,y)
-		*																				with a radius of r
+		*											with a radius of r
 		*/
-		void draw( LaserDriver &LD )const { LD.lCircleHD(xPos, yPos, radius); }
+		void draw( LaserDriver &LD )const { LD.lCircle(xPos, yPos, radius); }
 
 };
 

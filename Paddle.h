@@ -76,8 +76,6 @@ class Paddle
 		*	@param LD The LaserDrive object used to draw rectangles.
 		*																			
 		*/
-		void draw( LaserDriver &LD ) { LD.lRect(xPos, yPos, width, height); }
-
 };
 
 #endif
