@@ -5,7 +5,7 @@
 *		Depends on: laserDriver by Darren Curry.
 */
 
-#include "LaserDriver.h"		// Controls Galvanometer Scanners
+#include "../LaserDriver.h"		// Controls Galvanometer Scanners
 #include "Ball.h"					// Ball Class
 #include "Paddle.h"					// Paddle Class
 	
