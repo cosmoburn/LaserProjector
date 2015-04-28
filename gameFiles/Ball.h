@@ -3,12 +3,10 @@
 * 	Last Edit:  04/27/15
 *	Depends on: laserDriver by Darren Curry.
 */
-
 #ifndef BALL_H
 #define BALL_H
 
 #include <LaserDriver.h>  // For drawing with laser projector
-
 
 class Ball
 {
@@ -24,13 +22,12 @@ class Ball
 		int dy;
 
 	public:
-
 		/*
 		*	@brief Constructs Ball object
 		*		
-		* @param x The initial x position of the ball
+		*	@param x The initial x position of the ball
 		*	@param y The initial y position of the ball
-		* @param r The radius of the ball
+		* 	@param r The radius of the ball
 		*
 		**/
 	 	Ball(int x, int y, int r): 

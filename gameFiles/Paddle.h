@@ -30,7 +30,7 @@ class Paddle
 
 	public:
 
-		/*
+	 	/*
 		*	@brief Constructs Paddle object
 		*		
 		* @param x The initial x position of the paddle
