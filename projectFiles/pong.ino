@@ -26,7 +26,7 @@ const unsigned int DRAW_DELAY = 1000;
 void setup() 
 {	
 		// main game loop
-	void playGame(
+	void playGamel(
 		LaserDriver &LD,
 		Ball &ball,
 		Paddle &lPad,
@@ -57,7 +57,7 @@ void loop()
 	LaserDriver LD;
 
 	 //Ball object at (x,y, with radius r)
-	static Ball ball( (COURT_WIDTH/2)+ 10, COURT_HEIGHT/2, 5 );
+	static Ball ball( (COURT_WIDTH/2), COURT_HEIGHT/2, 5 );
 
 	 //Paddle objects at (x, y, width, height )
 	static Paddle lPad(0, (COURT_HEIGHT/2), 10, 30);
@@ -89,7 +89,6 @@ void playGame(LaserDriver &LD, Ball &ball, Paddle &lPad, Paddle &rPad)
 		
 	}
 }
-
 
 /******************************************************************************
 *                            Secondary Functions                              *
@@ -194,14 +193,14 @@ void checkCollision(
 	if ( ball.getX() >= COURT_WIDTH - ball.getR() )
 	{
 		ball.reset(COURT_WIDTH/2, COURT_HEIGHT/2);
-		ball.setVel(0,0);
+		ball.setVel(3,3);
 	}
 
 	/* if player 2 scores */
 	if ( ball.getX() <= ball.getR() )
 	{	
 		ball.reset(COURT_WIDTH/2, COURT_HEIGHT/2);
-		ball.setVel(0,0);	
+		ball.setVel(-3,-3);	
 	}
 
 		/* ball collision with top and bottom walls */
@@ -231,8 +230,11 @@ void checkCollision(
 		&& ball.getY() + ball.getR() >= lPad.getY()
 		&& ball.getY() - ball.getR() <= lPad.getY() + lPad.getH() )
 	{	
+		
 		ball.setVel(-ball.getDx(), ball.getDy());
-		//ball.setVel( -ball.getDx(), (ball.getY() - (lPad.getY()/2)) /15 );  
+		ball.setPos( lPad.getW() + ball.getR(), ball.getY());
+
+		  
 	}
 
 
@@ -242,7 +244,9 @@ void checkCollision(
 		&& ball.getY() + ball.getR() >= rPad.getY()
 		&& ball.getY() - ball.getR() <= rPad.getY() + rPad.getH() )
 	{	
+		
 		ball.setVel(-ball.getDx(), ball.getDy());
-		//ball.setVel( -ball.getDx(), (ball.getY() - (rPad.getY()/2)) /15 );
+		ball.setPos( (COURT_WIDTH - rPad.getW() - ball.getR() ), ball.getY());
+		
 	}
 }

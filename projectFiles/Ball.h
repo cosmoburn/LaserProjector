@@ -34,8 +34,8 @@ class Ball
 			xPos(x), 
 			yPos(y),
 			radius(r),
-			dx(2),
-			dy(2) 
+			dx(3),
+			dy(3) 
 	 	{
 			//
 	 	}
@@ -79,6 +79,9 @@ class Ball
 		*											with a radius of r
 		*/
 		void draw( LaserDriver &LD )const { LD.lCircle(xPos, yPos, radius); }
+
+
+		void setPos(int x, int y){ xPos = x; yPos = y; }
 
 };
 
