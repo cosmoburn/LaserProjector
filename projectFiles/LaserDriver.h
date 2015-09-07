@@ -4,7 +4,7 @@
  * CLUB *  KCTCS: Bluegrass Community College
  ********  Cooper Campus
  * 2015 *
- ********  Last Edit: 04/27 by Arthur Silveira
+ ********  Last Edit: 04/27/14 by Arthur Silveira
  */
 
 #ifndef LASERDRIVER_h
